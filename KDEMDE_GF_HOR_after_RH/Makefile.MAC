@@ -1,0 +1,48 @@
+ARCH = native
+
+CC= g++
+#CC=clang
+#---------------------------------
+# compiler flags
+#---------------------------------
+CXXFLAGS = -Wall -pedantic -O2 
+
+#===============================================================================
+# GSL lib
+#===============================================================================
+GSL          = gsl
+GSL_INC_PATH = /usr/local/include/
+GSL_LIB_PATH = /usr/local/lib/
+LIBSGSL = -L$(GSL_LIB_PATH) -l$(GSL) -lgslcblas
+
+#---------------------------------
+# these flags are now program specific
+#---------------------------------
+
+OBJS = ./ODE_solver_Rec.o ./routines.o ./functions.o ./EMDEPerturbations.o
+
+LIBS = $(LIBSGSL)
+					
+#---------------------------------
+# programs
+#---------------------------------
+all: run
+
+run:  $(OBJS) KDEMDE.o
+	 	@echo "Linking..."
+	 	$(CC) $(LXXFLAGS) $(OBJS) KDEMDE.o $(LIBS) -o KDEMDE
+
+#---------------------------------
+# rules
+#---------------------------------	
+
+INC_PATH = -I$(GSL_INC_PATH) -I.
+
+.cpp.o:
+	@echo "Erzeuge Objektfile $@"
+	$(CC) $(CXXFLAGS) $(INC_PATH) -c $< -o $@ 
+	
+.cc.o:
+	@echo "Erzeuge Objektfile $@"
+	$(CC) $(CXXFLAGS) $(INC_PATH) -c $< -o $@ 
+

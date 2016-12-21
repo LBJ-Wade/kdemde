@@ -1,0 +1,48 @@
+ARCH = native
+
+CC= g++
+
+#---------------------------------
+# compiler flags
+#---------------------------------
+CXXFLAGS = -Wall -pedantic -O2 
+
+#===============================================================================
+# GSL lib
+#===============================================================================
+GSL          = gsl
+GSL_INC_PATH = /usr/local/include/
+GSL_LIB_PATH = /usr/local/lib/
+LIBSGSL = -L$(GSL_LIB_PATH) -l$(GSL) -lgslcblas
+
+#---------------------------------
+# these flags are now program specific
+#---------------------------------
+
+OBJS = ./ODE_solver/ODE_solver_Rec.o ./routines.o
+
+LIBS = $(LIBSGSL)
+					
+#---------------------------------
+# programs
+#---------------------------------
+all: run
+
+run:  $(OBJS) main.o 
+	 	@echo "Linking..."
+	 	$(CC) $(LXXFLAGS) $(OBJS) main.o $(LIBS) -o KinDec_RD_Test
+
+#---------------------------------
+# rules
+#---------------------------------	
+
+INC_PATH = -I$(GSL_INC_PATH) -I./ODE_solver -I.
+
+.cpp.o:
+	@echo "Erzeuge Objektfile $@"
+	$(CC) $(CXXFLAGS) $(INC_PATH) -c $< -o $@ 
+	
+.cc.o:
+	@echo "Erzeuge Objektfile $@"
+	$(CC) $(CXXFLAGS) $(INC_PATH) -c $< -o $@ 
+
